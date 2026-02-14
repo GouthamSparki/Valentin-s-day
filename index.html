@@ -1,3 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Valentine's Day ❤️</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#ff4e8a,#ff9ecf);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    position:relative;
+}
+
+.content{
+    z-index:2;
+}
+
+h1{color:white;font-size:32px;margin-bottom:10px;}
+h2{color:white;margin-bottom:20px;}
+
+.buttons{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+}
+
+.btn{
+    padding:12px 25px;
+    font-size:16px;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+#yesBtn{
+    background:white;
+    color:#ff2e6f;
+    font-weight:bold;
+}
+
+#noBtn{
+    background:#222;
+    color:white;
+    position:relative;
+}
+
+/* Floating hearts */
+.heart{
+    position:absolute;
+    color:rgba(255,255,255,0.8);
+    animation:float 6s linear infinite;
+    z-index:1;
+}
+
+@keyframes float{
+    0%{transform:translateY(100vh);opacity:0;}
+    50%{opacity:1;}
+    100%{transform:translateY(-10vh);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="content">
+    <h1>❤️ Happy Valentine's Day ❤️</h1>
+    <h2>Will you be my Valentine? 💖</h2>
+
+    <div class="buttons">
+        <button class="btn" id="yesBtn">Yes 💘</button>
+        <button class="btn" id="noBtn">No 😢</button>
+    </div>
+</div>
+
 <script>
 
 const noBtn = document.getElementById("noBtn");
@@ -7,12 +89,12 @@ let moved = false;
 let posX = 0;
 let posY = 0;
 
-// YES CLICK
+/* YES BUTTON */
 yesBtn.addEventListener("click", ()=>{
     alert("Yayyy 💖 Happy Valentine's Day!");
 });
 
-// NO CLICK (small simple message)
+/* NO BUTTON SMALL MESSAGE */
 noBtn.addEventListener("click", ()=>{
     const msg = document.createElement("div");
     msg.innerText = "Nice try 😄 but destiny says YES 💖";
@@ -27,7 +109,6 @@ noBtn.addEventListener("click", ()=>{
     msg.style.fontSize = "14px";
     msg.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";
     msg.style.zIndex = "999";
-
     document.body.appendChild(msg);
 
     setTimeout(()=>{
@@ -77,15 +158,31 @@ function escape(mouseX, mouseY){
     }
 }
 
-// Desktop
+/* Desktop */
 document.addEventListener("mousemove", e=>{
     escape(e.clientX, e.clientY);
 });
 
-// Mobile
+/* Mobile */
 document.addEventListener("touchmove", e=>{
     const t = e.touches[0];
     escape(t.clientX, t.clientY);
 });
 
+/* Floating hearts */
+function createHeart(){
+    const heart=document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML="❤️";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=Math.random()*15+15+"px";
+    heart.style.animationDuration=Math.random()*3+3+"s";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+}
+setInterval(createHeart,400);
+
 </script>
+
+</body>
+</html>
