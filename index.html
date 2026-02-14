@@ -1,82 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Valentine's Day ❤️</title>
-
-<style>
-body{
-    margin:0;
-    height:100vh;
-    overflow:hidden;
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,#ff4e8a,#ff9ecf);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    position:relative;
-}
-
-.content{ z-index:2; }
-
-h1{color:white;font-size:32px;margin-bottom:10px;}
-h2{color:white;margin-bottom:20px;}
-
-.buttons{
-    display:flex;
-    gap:20px;
-    justify-content:center;
-}
-
-.btn{
-    padding:12px 25px;
-    font-size:16px;
-    border:none;
-    border-radius:25px;
-    cursor:pointer;
-}
-
-#yesBtn{
-    background:white;
-    color:#ff2e6f;
-    font-weight:bold;
-}
-
-#noBtn{
-    background:#222;
-    color:white;
-    position:relative;
-}
-
-.heart{
-    position:absolute;
-    color:rgba(255,255,255,0.8);
-    animation:float 6s linear infinite;
-    z-index:1;
-}
-
-@keyframes float{
-    0%{transform:translateY(100vh);opacity:0;}
-    50%{opacity:1;}
-    100%{transform:translateY(-10vh);opacity:0;}
-}
-</style>
-</head>
-
-<body>
-
-<div class="content">
-    <h1>❤️ Happy Valentine's Day ❤️</h1>
-    <h2>Will you be my Valentine? 💖</h2>
-
-    <div class="buttons">
-        <button class="btn" id="yesBtn">Yes 💘</button>
-        <button class="btn" id="noBtn">No 😢</button>
-    </div>
-</div>
-
 <script>
 
 const noBtn = document.getElementById("noBtn");
@@ -88,25 +9,30 @@ let posY = 0;
 
 // YES CLICK
 yesBtn.addEventListener("click", ()=>{
-    document.body.innerHTML=`
-    <div style="display:flex;justify-content:center;align-items:center;height:100vh;
-    background:linear-gradient(135deg,#ff4e8a,#ff9ecf);color:white;text-align:center;">
-        <h1 style="font-size:34px;">
-        Yessss! 💖 You just made my heart the happiest! ❤️
-        </h1>
-    </div>`;
+    alert("Yayyy 💖 Happy Valentine's Day!");
 });
 
-// NO CLICK (if someone actually catches it 😄)
+// NO CLICK (small simple message)
 noBtn.addEventListener("click", ()=>{
-    document.body.innerHTML=`
-    <div style="display:flex;justify-content:center;align-items:center;height:100vh;
-    background:black;color:white;text-align:center;">
-        <h1 style="font-size:32px;">
-        😱 OMG! You actually caught the No button! <br><br>
-        But sorry… destiny says you must click YES 😏💖
-        </h1>
-    </div>`;
+    const msg = document.createElement("div");
+    msg.innerText = "Nice try 😄 but destiny says YES 💖";
+    msg.style.position = "fixed";
+    msg.style.bottom = "20px";
+    msg.style.left = "50%";
+    msg.style.transform = "translateX(-50%)";
+    msg.style.background = "white";
+    msg.style.color = "#ff2e6f";
+    msg.style.padding = "8px 15px";
+    msg.style.borderRadius = "20px";
+    msg.style.fontSize = "14px";
+    msg.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";
+    msg.style.zIndex = "999";
+
+    document.body.appendChild(msg);
+
+    setTimeout(()=>{
+        msg.remove();
+    },2000);
 });
 
 function activateAbsolute(){
@@ -162,20 +88,4 @@ document.addEventListener("touchmove", e=>{
     escape(t.clientX, t.clientY);
 });
 
-// floating hearts
-function createHeart(){
-    const heart=document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML="❤️";
-    heart.style.left=Math.random()*100+"vw";
-    heart.style.fontSize=Math.random()*15+15+"px";
-    heart.style.animationDuration=Math.random()*3+3+"s";
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),6000);
-}
-setInterval(createHeart,400);
-
 </script>
-
-</body>
-</html>
