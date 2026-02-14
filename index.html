@@ -42,6 +42,7 @@
         background: white;
         color: #ff2e6f;
         font-weight: bold;
+        transition: 0.3s;
     }
 
     #yesBtn:hover {
@@ -52,6 +53,7 @@
         position: absolute;
         background: #222;
         color: white;
+        transition: left 0.1s, top 0.1s;
     }
 
     .heart {
@@ -82,10 +84,10 @@
 
 const noBtn = document.getElementById("noBtn");
 
-// Place initially
-jumpButton();
+// Start position
+moveRandom();
 
-function jumpButton() {
+function moveRandom() {
     const maxX = window.innerWidth - noBtn.offsetWidth;
     const maxY = window.innerHeight - noBtn.offsetHeight;
 
@@ -96,28 +98,28 @@ function jumpButton() {
     noBtn.style.top = randomY + "px";
 }
 
-// If cursor comes close → INSTANT JUMP
-function detectProximity(x, y) {
+// Move FAST when cursor is near
+function checkDistance(x, y) {
     const rect = noBtn.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    const btnCenterX = rect.left + rect.width / 2;
+    const btnCenterY = rect.top + rect.height / 2;
 
-    const distance = Math.hypot(x - centerX, y - centerY);
+    const distance = Math.hypot(x - btnCenterX, y - btnCenterY);
 
-    if (distance < 100) {  // detection area
-        jumpButton();
+    if (distance < 120) {  // detection range
+        moveRandom();
     }
 }
 
 // Desktop
 document.addEventListener("mousemove", (e) => {
-    detectProximity(e.clientX, e.clientY);
+    checkDistance(e.clientX, e.clientY);
 });
 
 // Mobile
 document.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
-    detectProximity(touch.clientX, touch.clientY);
+    checkDistance(touch.clientX, touch.clientY);
 });
 
 function sayYes() {
@@ -125,7 +127,7 @@ function sayYes() {
         <div style="display:flex;justify-content:center;align-items:center;height:100vh;
         background:linear-gradient(135deg,#ff4e8a,#ff9ecf);color:white;text-align:center;">
             <h1 style="font-size:34px;">
-            Yessss! 💖 You just made my heart the happiest! ❤️
+            Yessss! 💖 You just made my whole year beautiful! ❤️
             </h1>
         </div>
     `;
