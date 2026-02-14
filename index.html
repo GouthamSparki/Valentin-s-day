@@ -61,7 +61,7 @@
     #noBtn {
         background: #222;
         color: white;
-        position: relative; /* Initially normal */
+        position: relative;
     }
 
     .heart {
@@ -76,7 +76,6 @@
         50% { opacity: 1; }
         100% { transform: translateY(-10vh); opacity: 0; }
     }
-
 </style>
 </head>
 
@@ -95,50 +94,63 @@
 <script>
 
 const noBtn = document.getElementById("noBtn");
-let moved = false; // To switch from normal position to absolute
 
-function jumpButton() {
+let moved = false;
+let posX = 0;
+let posY = 0;
 
-    // Switch to absolute only when first time moving
+function activateAbsolutePosition() {
     if (!moved) {
         const rect = noBtn.getBoundingClientRect();
         noBtn.style.position = "absolute";
-        noBtn.style.left = rect.left + "px";
-        noBtn.style.top = rect.top + "px";
+        posX = rect.left;
+        posY = rect.top;
+        noBtn.style.left = posX + "px";
+        noBtn.style.top = posY + "px";
         moved = true;
     }
-
-    const maxX = window.innerWidth - noBtn.offsetWidth;
-    const maxY = window.innerHeight - noBtn.offsetHeight;
-
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
-
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
 }
 
-function detectProximity(x, y) {
+function moveRapidly(mouseX, mouseY) {
+
+    activateAbsolutePosition();
+
     const rect = noBtn.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
-    const distance = Math.hypot(x - centerX, y - centerY);
+    const dx = centerX - mouseX;
+    const dy = centerY - mouseY;
 
-    if (distance < 100) {
-        jumpButton();
+    const distance = Math.hypot(dx, dy);
+
+    if (distance < 120) {
+
+        const speed = 25; // Higher = faster movement
+
+        posX += (dx / distance) * speed;
+        posY += (dy / distance) * speed;
+
+        const maxX = window.innerWidth - rect.width;
+        const maxY = window.innerHeight - rect.height;
+
+        posX = Math.max(0, Math.min(maxX, posX));
+        posY = Math.max(0, Math.min(maxY, posY));
+
+        noBtn.style.left = posX + "px";
+        noBtn.style.top = posY + "px";
     }
 }
 
 // Desktop
 document.addEventListener("mousemove", (e) => {
-    detectProximity(e.clientX, e.clientY);
+    moveRapidly(e.clientX, e.clientY);
 });
 
 // Mobile
-document.addEventListener("touchstart", (e) => {
+document.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
-    detectProximity(touch.clientX, touch.clientY);
+    moveRapidly(touch.clientX, touch.clientY);
 });
 
 function sayYes() {
