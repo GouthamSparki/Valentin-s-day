@@ -13,66 +13,56 @@
     body {
         margin: 0;
         height: 100vh;
+        overflow: hidden;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #ff758c, #ff7eb3);
         display: flex;
         justify-content: center;
         align-items: center;
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #ff758c, #ff7eb3);
-        overflow: hidden;
-    }
-
-    .container {
         text-align: center;
-        background: rgba(255,255,255,0.95);
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        width: 90%;
-        max-width: 400px;
         position: relative;
     }
 
     h1 {
-        color: #e6005c;
-        font-size: 28px;
+        color: white;
+        font-size: 32px;
+        margin-bottom: 10px;
     }
 
     h2 {
-        color: #ff3366;
-        font-size: 20px;
-        margin-bottom: 25px;
+        color: #fff;
+        margin-bottom: 20px;
     }
 
     .btn {
-        padding: 12px 22px;
+        padding: 12px 25px;
         font-size: 16px;
         border: none;
         border-radius: 25px;
         cursor: pointer;
-        margin: 10px;
         transition: 0.3s;
     }
 
     #yesBtn {
-        background: #ff4d88;
-        color: white;
+        background: white;
+        color: #ff3366;
+        font-weight: bold;
     }
 
     #yesBtn:hover {
         transform: scale(1.1);
-        background: #e6005c;
     }
 
     #noBtn {
-        background: #777;
-        color: white;
         position: absolute;
+        background: #444;
+        color: white;
     }
 
     /* Floating hearts */
     .heart {
         position: absolute;
-        color: rgba(255,255,255,0.7);
+        color: rgba(255,255,255,0.8);
         animation: float 6s linear infinite;
     }
 
@@ -87,41 +77,37 @@
 
 <body>
 
-<div class="container" id="card">
+<div>
     <h1>❤️ Happy Valentine's Day ❤️</h1>
     <h2>Will you be my Valentine? 💖</h2>
-
     <button class="btn" id="yesBtn" onclick="sayYes()">Yes 💘</button>
-    <button class="btn" id="noBtn">No 😢</button>
 </div>
+
+<button class="btn" id="noBtn">No 😢</button>
 
 <script>
 
 const noBtn = document.getElementById("noBtn");
-const card = document.getElementById("card");
 
 // Initial position
 noBtn.style.left = "60%";
-noBtn.style.top = "70%";
+noBtn.style.top = "60%";
 
-function moveButtonAway(x, y) {
+function moveAway(x, y) {
 
-    const rect = card.getBoundingClientRect();
     const btnRect = noBtn.getBoundingClientRect();
 
-    // Calculate direction away from pointer
-    let newX = btnRect.left - rect.left;
-    let newY = btnRect.top - rect.top;
+    let newX = btnRect.left;
+    let newY = btnRect.top;
 
-    const dx = newX - (x - rect.left);
-    const dy = newY - (y - rect.top);
+    const dx = newX - x;
+    const dy = newY - y;
 
-    newX += dx * 0.5;
-    newY += dy * 0.5;
+    newX += dx * 0.4;
+    newY += dy * 0.4;
 
-    // Keep inside container
-    const maxX = rect.width - btnRect.width;
-    const maxY = rect.height - btnRect.height;
+    const maxX = window.innerWidth - btnRect.width;
+    const maxY = window.innerHeight - btnRect.height;
 
     newX = Math.max(0, Math.min(maxX, newX));
     newY = Math.max(0, Math.min(maxY, newY));
@@ -131,22 +117,22 @@ function moveButtonAway(x, y) {
 }
 
 // Desktop
-card.addEventListener("mousemove", function(e) {
-    moveButtonAway(e.clientX, e.clientY);
+document.addEventListener("mousemove", function(e) {
+    moveAway(e.clientX, e.clientY);
 });
 
 // Mobile
-card.addEventListener("touchmove", function(e) {
+document.addEventListener("touchmove", function(e) {
     const touch = e.touches[0];
-    moveButtonAway(touch.clientX, touch.clientY);
+    moveAway(touch.clientX, touch.clientY);
 });
 
 function sayYes() {
     document.body.innerHTML = `
         <div style="display:flex;justify-content:center;align-items:center;height:100vh;
-        font-family:Segoe UI;background:linear-gradient(135deg,#ff758c,#ff7eb3);">
-            <h1 style="color:white;font-size:32px;text-align:center;">
-            Yayyyy! 💖 You are mine forever! ❤️
+        background:linear-gradient(135deg,#ff758c,#ff7eb3);color:white;text-align:center;">
+            <h1 style="font-size:34px;">
+            Yayyyy! 💖 You made my heart smile! ❤️
             </h1>
         </div>
     `;
@@ -162,9 +148,7 @@ function createHeart() {
     heart.style.animationDuration = Math.random() * 3 + 3 + "s";
     document.body.appendChild(heart);
 
-    setTimeout(() => {
-        heart.remove();
-    }, 6000);
+    setTimeout(() => heart.remove(), 6000);
 }
 
 setInterval(createHeart, 400);
