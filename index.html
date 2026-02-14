@@ -75,7 +75,7 @@ h2{color:white;margin-bottom:20px;}
     <h2>Will you be my Valentine? 💖</h2>
 
     <div class="buttons">
-        <button class="btn" id="yesBtn" onclick="sayYes()">Yes 💘</button>
+        <button class="btn" id="yesBtn">Yes 💘</button>
         <button class="btn" id="noBtn">No 😢</button>
     </div>
 </div>
@@ -83,10 +83,27 @@ h2{color:white;margin-bottom:20px;}
 <script>
 
 const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
 
 let moved = false;
 let posX = 0;
 let posY = 0;
+
+// YES button works
+yesBtn.addEventListener("click", ()=>{
+    document.body.innerHTML=`
+    <div style="display:flex;justify-content:center;align-items:center;height:100vh;
+    background:linear-gradient(135deg,#ff4e8a,#ff9ecf);color:white;text-align:center;">
+        <h1 style="font-size:34px;">
+        Yessss! 💖 You just made my heart the happiest! ❤️
+        </h1>
+    </div>`;
+});
+
+// NO button normal click (if somehow clicked)
+noBtn.addEventListener("click", ()=>{
+    alert("Nice try 😜");
+});
 
 function activateAbsolute(){
     if(!moved){
@@ -102,70 +119,48 @@ function activateAbsolute(){
 
 function escape(mouseX, mouseY){
 
-    activateAbsolute();
-
     const rect = noBtn.getBoundingClientRect();
     const centerX = rect.left + rect.width/2;
     const centerY = rect.top + rect.height/2;
 
-    let dx = centerX - mouseX;
-    let dy = centerY - mouseY;
+    const dx = centerX - mouseX;
+    const dy = centerY - mouseY;
+    const distance = Math.hypot(dx, dy);
 
-    let distance = Math.hypot(dx, dy);
+    if(distance < 130){
 
-    if(distance < 140){
+        activateAbsolute();
 
-        // if pointer is too close (almost touching)
-        if(distance < 40){
-            dx = (Math.random()-0.5) * 2;
-            dy = (Math.random()-0.5) * 2;
-            distance = 1;
-        }
+        const speed = 80;
 
-        const speed = 120; // EXTREMELY FAST
+        const moveX = (dx/distance) * speed;
+        const moveY = (dy/distance) * speed;
 
-        posX += (dx/distance) * speed;
-        posY += (dy/distance) * speed;
+        posX += moveX;
+        posY += moveY;
 
         const maxX = window.innerWidth - rect.width;
         const maxY = window.innerHeight - rect.height;
 
-        // if trapped at edge → force random reposition
-        if(posX <= 0 || posX >= maxX){
-            posX = Math.random() * maxX;
-        }
-        if(posY <= 0 || posY >= maxY){
-            posY = Math.random() * maxY;
-        }
-
-        posX = Math.max(0, Math.min(maxX, posX));
-        posY = Math.max(0, Math.min(maxY, posY));
+        // prevent edge trapping
+        posX = Math.max(10, Math.min(maxX-10, posX));
+        posY = Math.max(10, Math.min(maxY-10, posY));
 
         noBtn.style.left = posX+"px";
         noBtn.style.top = posY+"px";
     }
 }
 
-// desktop
+// Desktop
 document.addEventListener("mousemove", e=>{
     escape(e.clientX, e.clientY);
 });
 
-// mobile
+// Mobile
 document.addEventListener("touchmove", e=>{
     const t = e.touches[0];
     escape(t.clientX, t.clientY);
 });
-
-function sayYes(){
-    document.body.innerHTML=`
-    <div style="display:flex;justify-content:center;align-items:center;height:100vh;
-    background:linear-gradient(135deg,#ff4e8a,#ff9ecf);color:white;text-align:center;">
-        <h1 style="font-size:34px;">
-        Yessss! 💖 You just made my heart the happiest! ❤️
-        </h1>
-    </div>`;
-}
 
 // floating hearts
 function createHeart(){
@@ -178,7 +173,6 @@ function createHeart(){
     document.body.appendChild(heart);
     setTimeout(()=>heart.remove(),6000);
 }
-
 setInterval(createHeart,400);
 
 </script>
