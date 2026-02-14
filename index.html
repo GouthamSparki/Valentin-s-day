@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Valentine's Day My Love ❤️</title>
+<title>Happy Valentine's Day ❤️</title>
 
 <style>
     body {
@@ -52,10 +52,7 @@
         background: white;
         color: #ff2e6f;
         font-weight: bold;
-    }
-
-    #yesBtn:hover {
-        transform: scale(1.1);
+        /* No transform / no animation = fully rigid */
     }
 
     #noBtn {
@@ -99,7 +96,7 @@ let moved = false;
 let posX = 0;
 let posY = 0;
 
-function activateAbsolutePosition() {
+function activateAbsolute() {
     if (!moved) {
         const rect = noBtn.getBoundingClientRect();
         noBtn.style.position = "absolute";
@@ -111,9 +108,9 @@ function activateAbsolutePosition() {
     }
 }
 
-function moveRapidly(mouseX, mouseY) {
+function moveVeryFast(mouseX, mouseY) {
 
-    activateAbsolutePosition();
+    activateAbsolute();
 
     const rect = noBtn.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -124,9 +121,9 @@ function moveRapidly(mouseX, mouseY) {
 
     const distance = Math.hypot(dx, dy);
 
-    if (distance < 120) {
+    if (distance < 150) {
 
-        const speed = 25; // Higher = faster movement
+        const speed = 60; // 🔥 VERY FAST (increase more if needed)
 
         posX += (dx / distance) * speed;
         posY += (dy / distance) * speed;
@@ -144,13 +141,13 @@ function moveRapidly(mouseX, mouseY) {
 
 // Desktop
 document.addEventListener("mousemove", (e) => {
-    moveRapidly(e.clientX, e.clientY);
+    moveVeryFast(e.clientX, e.clientY);
 });
 
 // Mobile
 document.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
-    moveRapidly(touch.clientX, touch.clientY);
+    moveVeryFast(touch.clientX, touch.clientY);
 });
 
 function sayYes() {
