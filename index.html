@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Valentine's Day My Love ❤️</title>
+<title>Happy Valentine's Day ❤️</title>
 
 <style>
     body {
@@ -19,6 +19,10 @@
         position: relative;
     }
 
+    .content {
+        z-index: 2;
+    }
+
     h1 {
         color: white;
         font-size: 32px;
@@ -28,6 +32,12 @@
     h2 {
         color: white;
         margin-bottom: 20px;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
     }
 
     .btn {
@@ -42,7 +52,6 @@
         background: white;
         color: #ff2e6f;
         font-weight: bold;
-        transition: 0.3s;
     }
 
     #yesBtn:hover {
@@ -50,16 +59,16 @@
     }
 
     #noBtn {
-        position: absolute;
         background: #222;
         color: white;
-        transition: left 0.1s, top 0.1s;
+        position: relative; /* Initially normal */
     }
 
     .heart {
         position: absolute;
         color: rgba(255,255,255,0.8);
         animation: float 6s linear infinite;
+        z-index: 1;
     }
 
     @keyframes float {
@@ -67,27 +76,38 @@
         50% { opacity: 1; }
         100% { transform: translateY(-10vh); opacity: 0; }
     }
+
 </style>
 </head>
 
 <body>
 
-<div>
-    <h1>❤️ Happy Valentine's Day My Love ❤️</h1>
+<div class="content">
+    <h1>❤️ Happy Valentine's Day ❤️</h1>
     <h2>Will you be my Valentine? 💖</h2>
-    <button class="btn" id="yesBtn" onclick="sayYes()">Yes 💘</button>
-</div>
 
-<button class="btn" id="noBtn">No 😢</button>
+    <div class="buttons">
+        <button class="btn" id="yesBtn" onclick="sayYes()">Yes 💘</button>
+        <button class="btn" id="noBtn">No 😢</button>
+    </div>
+</div>
 
 <script>
 
 const noBtn = document.getElementById("noBtn");
+let moved = false; // To switch from normal position to absolute
 
-// Start position
-moveRandom();
+function jumpButton() {
 
-function moveRandom() {
+    // Switch to absolute only when first time moving
+    if (!moved) {
+        const rect = noBtn.getBoundingClientRect();
+        noBtn.style.position = "absolute";
+        noBtn.style.left = rect.left + "px";
+        noBtn.style.top = rect.top + "px";
+        moved = true;
+    }
+
     const maxX = window.innerWidth - noBtn.offsetWidth;
     const maxY = window.innerHeight - noBtn.offsetHeight;
 
@@ -98,28 +118,27 @@ function moveRandom() {
     noBtn.style.top = randomY + "px";
 }
 
-// Move FAST when cursor is near
-function checkDistance(x, y) {
+function detectProximity(x, y) {
     const rect = noBtn.getBoundingClientRect();
-    const btnCenterX = rect.left + rect.width / 2;
-    const btnCenterY = rect.top + rect.height / 2;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-    const distance = Math.hypot(x - btnCenterX, y - btnCenterY);
+    const distance = Math.hypot(x - centerX, y - centerY);
 
-    if (distance < 120) {  // detection range
-        moveRandom();
+    if (distance < 100) {
+        jumpButton();
     }
 }
 
 // Desktop
 document.addEventListener("mousemove", (e) => {
-    checkDistance(e.clientX, e.clientY);
+    detectProximity(e.clientX, e.clientY);
 });
 
 // Mobile
-document.addEventListener("touchmove", (e) => {
+document.addEventListener("touchstart", (e) => {
     const touch = e.touches[0];
-    checkDistance(touch.clientX, touch.clientY);
+    detectProximity(touch.clientX, touch.clientY);
 });
 
 function sayYes() {
@@ -127,7 +146,7 @@ function sayYes() {
         <div style="display:flex;justify-content:center;align-items:center;height:100vh;
         background:linear-gradient(135deg,#ff4e8a,#ff9ecf);color:white;text-align:center;">
             <h1 style="font-size:34px;">
-            Yessss! 💖 You just made my whole year beautiful! ❤️
+            Yessss! 💖 You just made my heart the happiest! ❤️
             </h1>
         </div>
     `;
