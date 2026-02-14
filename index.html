@@ -99,7 +99,196 @@ yesBtn.addEventListener("click", ()=>{
         </h1>
     </div>`;
 });
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Valentine's Day ❤️</title>
 
+<style>
+body{
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#ff4e8a,#ff9ecf);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    position:relative;
+}
+
+.content{
+    z-index:2;
+}
+
+h1{color:white;font-size:32px;margin-bottom:10px;}
+h2{color:white;margin-bottom:20px;}
+
+.buttons{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+}
+
+.btn{
+    padding:12px 25px;
+    font-size:16px;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+#yesBtn{
+    background:white;
+    color:#ff2e6f;
+    font-weight:bold;
+}
+
+#noBtn{
+    background:#222;
+    color:white;
+    position:relative;
+}
+
+/* floating hearts */
+.heart{
+    position:absolute;
+    color:rgba(255,255,255,0.8);
+    animation:float 6s linear infinite;
+    z-index:1;
+}
+
+@keyframes float{
+    0%{transform:translateY(100vh);opacity:0;}
+    50%{opacity:1;}
+    100%{transform:translateY(-10vh);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="content">
+    <h1>❤️ Happy Valentine's Day ❤️</h1>
+    <h2>Will you be my Valentine? 💖</h2>
+
+    <div class="buttons">
+        <button class="btn" id="yesBtn">Yes 💘</button>
+        <button class="btn" id="noBtn">No 😢</button>
+    </div>
+</div>
+
+<script>
+
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+
+let moved = false;
+let posX = 0;
+let posY = 0;
+
+// YES click
+yesBtn.addEventListener("click", ()=>{
+    document.body.innerHTML=`
+    <div style="display:flex;justify-content:center;align-items:center;height:100vh;
+    background:linear-gradient(135deg,#ff4e8a,#ff9ecf);color:white;text-align:center;">
+        <h1 style="font-size:34px;">
+        Yessss! 💖 You just made my heart the happiest! ❤️
+        </h1>
+    </div>`;
+});
+
+function activateAbsolute(){
+    if(!moved){
+        const rect = noBtn.getBoundingClientRect();
+        noBtn.style.position="absolute";
+        posX = rect.left;
+        posY = rect.top;
+        noBtn.style.left = posX+"px";
+        noBtn.style.top = posY+"px";
+        moved = true;
+    }
+}
+
+function isOverlapping(x, y, btnRect, yesRect){
+    const margin = 20; // extra safety space
+
+    return !(
+        x + btnRect.width < yesRect.left - margin ||
+        x > yesRect.right + margin ||
+        y + btnRect.height < yesRect.top - margin ||
+        y > yesRect.bottom + margin
+    );
+}
+
+function escape(mouseX, mouseY){
+
+    const rect = noBtn.getBoundingClientRect();
+    const centerX = rect.left + rect.width/2;
+    const centerY = rect.top + rect.height/2;
+
+    const dx = centerX - mouseX;
+    const dy = centerY - mouseY;
+    const distance = Math.hypot(dx, dy);
+
+    if(distance < 140){
+
+        activateAbsolute();
+
+        const speed = 100;
+
+        let newX = posX + (dx/distance)*speed;
+        let newY = posY + (dy/distance)*speed;
+
+        const maxX = window.innerWidth - rect.width;
+        const maxY = window.innerHeight - rect.height;
+
+        newX = Math.max(10, Math.min(maxX-10, newX));
+        newY = Math.max(10, Math.min(maxY-10, newY));
+
+        const yesRect = yesBtn.getBoundingClientRect();
+
+        // prevent overlap
+        if(!isOverlapping(newX, newY, rect, yesRect)){
+            posX = newX;
+            posY = newY;
+            noBtn.style.left = posX+"px";
+            noBtn.style.top = posY+"px";
+        }
+    }
+}
+
+// Desktop
+document.addEventListener("mousemove", e=>{
+    escape(e.clientX, e.clientY);
+});
+
+// Mobile
+document.addEventListener("touchmove", e=>{
+    const t = e.touches[0];
+    escape(t.clientX, t.clientY);
+});
+
+// floating hearts
+function createHeart(){
+    const heart=document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML="❤️";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=Math.random()*15+15+"px";
+    heart.style.animationDuration=Math.random()*3+3+"s";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+}
+setInterval(createHeart,400);
+
+</script>
+
+</body>
+</html>
 function activateAbsolute(){
     if(!moved){
         const rect = noBtn.getBoundingClientRect();
