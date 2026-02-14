@@ -1,78 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Valentine's Day My Love❤️</title>
+<title>Happy Valentine's Day ❤️</title>
 
 <style>
-    body {
-        margin: 0;
-        height: 100vh;
-        overflow: hidden;
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #ff4e8a, #ff9ecf);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        position: relative;
-    }
+body{
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#ff4e8a,#ff9ecf);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    position:relative;
+}
 
-    .content {
-        z-index: 2;
-    }
+.content{
+    z-index:2;
+}
 
-    h1 {
-        color: white;
-        font-size: 32px;
-        margin-bottom: 10px;
-    }
+h1{color:white;font-size:32px;margin-bottom:10px;}
+h2{color:white;margin-bottom:20px;}
 
-    h2 {
-        color: white;
-        margin-bottom: 20px;
-    }
+.buttons{
+    display:flex;
+    gap:15px;
+    justify-content:center;
+}
 
-    .buttons {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-    }
+.btn{
+    padding:12px 25px;
+    font-size:16px;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+}
 
-    .btn {
-        padding: 12px 25px;
-        font-size: 16px;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-    }
+#yesBtn{
+    background:white;
+    color:#ff2e6f;
+    font-weight:bold;
+}
 
-    #yesBtn {
-        background: white;
-        color: #ff2e6f;
-        font-weight: bold;
-        /* No transform / no animation = fully rigid */
-    }
+#noBtn{
+    background:#222;
+    color:white;
+    position:relative;
+}
 
-    #noBtn {
-        background: #222;
-        color: white;
-        position: relative;
-    }
+/* floating hearts */
+.heart{
+    position:absolute;
+    color:rgba(255,255,255,0.8);
+    animation:float 6s linear infinite;
+    z-index:1;
+}
 
-    .heart {
-        position: absolute;
-        color: rgba(255,255,255,0.8);
-        animation: float 6s linear infinite;
-        z-index: 1;
-    }
-
-    @keyframes float {
-        0% { transform: translateY(100vh); opacity: 0; }
-        50% { opacity: 1; }
-        100% { transform: translateY(-10vh); opacity: 0; }
-    }
+@keyframes float{
+    0%{transform:translateY(100vh);opacity:0;}
+    50%{opacity:1;}
+    100%{transform:translateY(-10vh);opacity:0;}
+}
 </style>
 </head>
 
@@ -96,86 +88,88 @@ let moved = false;
 let posX = 0;
 let posY = 0;
 
-function activateAbsolute() {
-    if (!moved) {
+function activateAbsolute(){
+    if(!moved){
         const rect = noBtn.getBoundingClientRect();
-        noBtn.style.position = "absolute";
+        noBtn.style.position="absolute";
         posX = rect.left;
         posY = rect.top;
-        noBtn.style.left = posX + "px";
-        noBtn.style.top = posY + "px";
+        noBtn.style.left = posX+"px";
+        noBtn.style.top = posY+"px";
         moved = true;
     }
 }
 
-function moveVeryFast(mouseX, mouseY) {
+function escape(mouseX, mouseY){
 
     activateAbsolute();
 
     const rect = noBtn.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    const centerX = rect.left + rect.width/2;
+    const centerY = rect.top + rect.height/2;
 
-    const dx = centerX - mouseX;
-    const dy = centerY - mouseY;
+    let dx = centerX - mouseX;
+    let dy = centerY - mouseY;
 
-    const distance = Math.hypot(dx, dy);
+    let distance = Math.hypot(dx, dy);
 
-    if (distance < 150) {
+    if(distance < 140){
 
-        const speed = 60; // 🔥 VERY FAST (increase more if needed)
+        // if pointer is too close (almost touching)
+        if(distance < 40){
+            dx = (Math.random()-0.5) * 2;
+            dy = (Math.random()-0.5) * 2;
+            distance = 1;
+        }
 
-        posX += (dx / distance) * speed;
-        posY += (dy / distance) * speed;
+        const speed = 120; // EXTREMELY FAST
+
+        posX += (dx/distance) * speed;
+        posY += (dy/distance) * speed;
 
         const maxX = window.innerWidth - rect.width;
         const maxY = window.innerHeight - rect.height;
 
+        // if trapped at edge → force random reposition
+        if(posX <= 0 || posX >= maxX){
+            posX = Math.random() * maxX;
+        }
+        if(posY <= 0 || posY >= maxY){
+            posY = Math.random() * maxY;
+        }
+
         posX = Math.max(0, Math.min(maxX, posX));
         posY = Math.max(0, Math.min(maxY, posY));
 
-        noBtn.style.left = posX + "px";
-        noBtn.style.top = posY + "px";
+        noBtn.style.left = posX+"px";
+        noBtn.style.top = posY+"px";
     }
 }
 
-// Desktop
-document.addEventListener("mousemove", (e) => {
-    moveVeryFast(e.clientX, e.clientY);
+// desktop
+document.addEventListener("mousemove", e=>{
+    escape(e.clientX, e.clientY);
 });
 
-// Mobile
-document.addEventListener("touchmove", (e) => {
-    const touch = e.touches[0];
-    moveVeryFast(touch.clientX, touch.clientY);
+// mobile
+document.addEventListener("touchmove", e=>{
+    const t = e.touches[0];
+    escape(t.clientX, t.clientY);
 });
 
-function sayYes() {
-    document.body.innerHTML = `
-        <div style="display:flex;justify-content:center;align-items:center;height:100vh;
-        background:linear-gradient(135deg,#ff4e8a,#ff9ecf);color:white;text-align:center;">
-            <h1 style="font-size:34px;">
-            Yessss! 💖 You just made my heart the happiest! ❤️
-            </h1>
-        </div>
-    `;
+function sayYes(){
+    document.body.innerHTML=`
+    <div style="display:flex;justify-content:center;align-items:center;height:100vh;
+    background:linear-gradient(135deg,#ff4e8a,#ff9ecf);color:white;text-align:center;">
+        <h1 style="font-size:34px;">
+        Yessss! 💖 You just made my heart the happiest! ❤️
+        </h1>
+    </div>`;
 }
 
-// Floating hearts
-function createHeart() {
-    const heart = document.createElement("div");
+// floating hearts
+function createHeart(){
+    const heart=document.createElement("div");
     heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 15 + 15 + "px";
-    heart.style.animationDuration = Math.random() * 3 + 3 + "s";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000);
-}
-
-setInterval(createHeart, 400);
-
-</script>
-
-</body>
-</html>
+    heart.innerHTML="❤️";
+    heart.style.left=Math.random()*100+"vw";
