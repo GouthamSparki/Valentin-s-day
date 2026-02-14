@@ -6,16 +6,12 @@
 <title>Happy Valentine's Day ❤️</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
-
     body {
         margin: 0;
         height: 100vh;
         overflow: hidden;
         font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #ff758c, #ff7eb3);
+        background: linear-gradient(135deg, #ff4e8a, #ff9ecf);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -30,7 +26,7 @@
     }
 
     h2 {
-        color: #fff;
+        color: white;
         margin-bottom: 20px;
     }
 
@@ -40,13 +36,13 @@
         border: none;
         border-radius: 25px;
         cursor: pointer;
-        transition: 0.3s;
     }
 
     #yesBtn {
         background: white;
-        color: #ff3366;
+        color: #ff2e6f;
         font-weight: bold;
+        transition: 0.3s;
     }
 
     #yesBtn:hover {
@@ -55,11 +51,11 @@
 
     #noBtn {
         position: absolute;
-        background: #444;
+        background: #222;
         color: white;
+        transition: left 0.1s, top 0.1s;
     }
 
-    /* Floating hearts */
     .heart {
         position: absolute;
         color: rgba(255,255,255,0.8);
@@ -71,7 +67,6 @@
         50% { opacity: 1; }
         100% { transform: translateY(-10vh); opacity: 0; }
     }
-
 </style>
 </head>
 
@@ -89,50 +84,50 @@
 
 const noBtn = document.getElementById("noBtn");
 
-// Initial position
-noBtn.style.left = "60%";
-noBtn.style.top = "60%";
+// Start position
+moveRandom();
 
-function moveAway(x, y) {
+function moveRandom() {
+    const maxX = window.innerWidth - noBtn.offsetWidth;
+    const maxY = window.innerHeight - noBtn.offsetHeight;
 
-    const btnRect = noBtn.getBoundingClientRect();
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
 
-    let newX = btnRect.left;
-    let newY = btnRect.top;
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+}
 
-    const dx = newX - x;
-    const dy = newY - y;
+// Move FAST when cursor is near
+function checkDistance(x, y) {
+    const rect = noBtn.getBoundingClientRect();
+    const btnCenterX = rect.left + rect.width / 2;
+    const btnCenterY = rect.top + rect.height / 2;
 
-    newX += dx * 0.4;
-    newY += dy * 0.4;
+    const distance = Math.hypot(x - btnCenterX, y - btnCenterY);
 
-    const maxX = window.innerWidth - btnRect.width;
-    const maxY = window.innerHeight - btnRect.height;
-
-    newX = Math.max(0, Math.min(maxX, newX));
-    newY = Math.max(0, Math.min(maxY, newY));
-
-    noBtn.style.left = newX + "px";
-    noBtn.style.top = newY + "px";
+    if (distance < 120) {  // detection range
+        moveRandom();
+    }
 }
 
 // Desktop
-document.addEventListener("mousemove", function(e) {
-    moveAway(e.clientX, e.clientY);
+document.addEventListener("mousemove", (e) => {
+    checkDistance(e.clientX, e.clientY);
 });
 
 // Mobile
-document.addEventListener("touchmove", function(e) {
+document.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
-    moveAway(touch.clientX, touch.clientY);
+    checkDistance(touch.clientX, touch.clientY);
 });
 
 function sayYes() {
     document.body.innerHTML = `
         <div style="display:flex;justify-content:center;align-items:center;height:100vh;
-        background:linear-gradient(135deg,#ff758c,#ff7eb3);color:white;text-align:center;">
+        background:linear-gradient(135deg,#ff4e8a,#ff9ecf);color:white;text-align:center;">
             <h1 style="font-size:34px;">
-            Yayyyy! 💖 You made my heart smile! ❤️
+            Yessss! 💖 You just made my whole year beautiful! ❤️
             </h1>
         </div>
     `;
@@ -147,7 +142,6 @@ function createHeart() {
     heart.style.fontSize = Math.random() * 15 + 15 + "px";
     heart.style.animationDuration = Math.random() * 3 + 3 + "s";
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 6000);
 }
 
